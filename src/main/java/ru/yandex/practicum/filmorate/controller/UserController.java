@@ -40,6 +40,7 @@ public class UserController {
         users.put(user.getId(), user);
         return user;
     }
+
     private long getNextId() {
         long currentMaxId = users.keySet()
                 .stream()
