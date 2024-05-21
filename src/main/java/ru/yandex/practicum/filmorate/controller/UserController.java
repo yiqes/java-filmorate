@@ -25,16 +25,16 @@ public class UserController {
     @PostMapping
     public User create(@RequestBody User user) {
         if (user.getEmail() == null || !(user.getEmail().contains("@"))) {
-            throw new ValidateException("электронная почта не может быть пустой и должна содержать символ @");
+            throw new ValidateException("Электронная почта не может быть пустой и должна содержать символ @");
         }
         if (user.getLogin() == null || user.getLogin().contains(" ")) {
-            throw new ValidateException("логин не может быть пустым и содержать пробелы");
+            throw new ValidateException("Логин не может быть пустым и содержать пробелы");
         }
         if (user.getName() == null) {
             user.setName(user.getLogin());
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidateException("дата рождения не может быть в будущем.");
+            throw new ValidateException("Дата рождения не может быть в будущем.");
         }
         user.setId(getNextId());
         users.put(user.getId(), user);
@@ -53,16 +53,16 @@ public class UserController {
     @PutMapping
     public User update(@RequestBody User newUser) {
         if (newUser.getEmail() == null || !(newUser.getEmail().contains("@"))) {
-            throw new ValidateException("электронная почта не может быть пустой и должна содержать символ @");
+            throw new ValidateException("Электронная почта не может быть пустой и должна содержать символ @");
         }
         if (newUser.getLogin() == null || newUser.getLogin().contains(" ")) {
-            throw new ValidateException("логин не может быть пустым и содержать пробелы");
+            throw new ValidateException("Логин не может быть пустым и содержать пробелы");
         }
         if (newUser.getName() == null) {
             newUser.setName(newUser.getLogin());
         }
         if (newUser.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidateException("дата рождения не может быть в будущем.");
+            throw new ValidateException("Дата рождения не может быть в будущем.");
         }
         if (users.containsKey(newUser.getId())) {
             User oldUser = users.get(newUser.getId());

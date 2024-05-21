@@ -27,7 +27,7 @@ public class FilmController {
     public Film create(@RequestBody Film film) {
         log.setLevel(Level.INFO);
         if (film.getName() == null || film.getName().isBlank()) {
-            throw new ValidateException("название не может быть пустым");
+            throw new ValidateException("Название не может быть пустым");
         }
         if (film.getDescription().length() > 200) {
             throw new ValidateException("Максимальная длина описания - 200 символов");
@@ -55,7 +55,7 @@ public class FilmController {
     @PutMapping
     public Film update(@RequestBody Film newFilm) {
         if (newFilm.getName() == null) {
-            throw new ValidateException("название не может быть пустым");
+            throw new ValidateException("Название не может быть пустым");
         }
         if (newFilm.getDescription().length() > 200) {
             throw new ValidateException("Максимальная длина описания - 200 символов");

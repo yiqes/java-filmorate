@@ -40,7 +40,4 @@ class FilmorateApplicationTests {
 
 		assertThrows(ValidateException.class, () -> filmController.create(film));
 	}
-
-// Добавьте подобные тестовые методы для остальных путей и проверок
-
 }
