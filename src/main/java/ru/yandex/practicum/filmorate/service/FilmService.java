@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class FilmService {
     @Getter
     private final FilmStorage filmStorage;
-    private final int MAX_QUANTITY_POPULAR_FILMS = 10;
-    private final String NO_SUCH_LIKE = "Нет лайка от такого пользователя";
+    private final int maxQuantityPopularFilms = 10;
+    private final String noSuchLike = "Нет лайка от такого пользователя";
 
     @Autowired
     public FilmService(FilmStorage filmStorage) {
@@ -38,7 +38,7 @@ public class FilmService {
             film.setLikes(likes);
             filmStorage.amend(film);
         } else {
-            throw new NotFoundException(NO_SUCH_LIKE);
+            throw new NotFoundException(noSuchLike);
         }
     }
 
@@ -54,7 +54,7 @@ public class FilmService {
         List<Film> films = filmStorage.findAll();
         popularFilms.addAll(films);
         if (Objects.isNull(filmQuantity)) {
-            filmQuantity = MAX_QUANTITY_POPULAR_FILMS;
+            filmQuantity = maxQuantityPopularFilms;
         }
         return popularFilms.stream().limit(filmQuantity).collect(Collectors.toSet());
     }
