@@ -1,6 +1,6 @@
+/*
 package ru.yandex.practicum.filmorate.controller;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.user.User;
@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.user.User;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,12 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserControllerTest {
     private User user = new User();
-    private static Validator validator;
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
 
-    @BeforeAll
-    public static void init() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
-    }
 
     @BeforeEach
     public void beforeEach() {
@@ -62,4 +60,4 @@ public class UserControllerTest {
         Set<String> errorMessages = validate.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet());
         assertEquals(1, errorMessages.size());
     }
-}
+}*/

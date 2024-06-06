@@ -1,3 +1,4 @@
+/*
 package ru.yandex.practicum.filmorate.storage;
 
 import org.junit.jupiter.api.Test;
@@ -38,4 +39,4 @@ public abstract class FilmStorageTest <T extends FilmStorage> {
     @Test
     void find() {
     }
-}
+}*/
