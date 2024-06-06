@@ -15,7 +15,7 @@ public class InMemoryUserStorage implements UserStorage {
     private Long id = 1L;
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserStorage.class);
 
-    private final static String WRONG_ID = "неверный номер ID";
+    private static final String wrongId = "неверный номер ID";
 
     @Override
     public List<User> findAll() {
@@ -54,7 +54,7 @@ public class InMemoryUserStorage implements UserStorage {
             users.put(user.getId(), user);
             log.debug("Пользователь {} изменен на {}", oldUser, user);
         } else {
-            throw new NotFoundException(WRONG_ID);
+            throw new NotFoundException(wrongId);
         }
         return user;
     }
@@ -66,7 +66,7 @@ public class InMemoryUserStorage implements UserStorage {
             users.remove(user.getId());
             log.debug("Пользователь {} удалён", user);
         } else {
-            throw new NotFoundException(WRONG_ID);
+            throw new NotFoundException(wrongId);
         }
     }
 
@@ -75,7 +75,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(id)) {
             return users.get(id);
         } else {
-            throw new NotFoundException(WRONG_ID);
+            throw new NotFoundException(wrongId);
         }
     }
 
