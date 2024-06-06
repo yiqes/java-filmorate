@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class UserLoginConstraintValidator implements ConstraintValidator<UserLoginConstraint, String> {
     @Override
-    public boolean isValid(String login, ConstraintValidatorContext constraintValidatorContext){
+    public boolean isValid(String login, ConstraintValidatorContext constraintValidatorContext) {
         return !Objects.equals(null, login) && !login.isBlank() && !login.contains(" ");
     }
 }
