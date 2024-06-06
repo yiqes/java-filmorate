@@ -1,93 +1,59 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
-import ru.yandex.practicum.filmorate.ValidateException;
-import ru.yandex.practicum.filmorate.model.User;
+import javax.validation.Valid;
+import java.util.*;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-@Slf4j
 @RestController
-@RequestMapping("/users")
 public class UserController {
-    private final Map<Long, User> users = new HashMap<>();
+    private final UserService userService;
 
-    @GetMapping
-    public Collection<User> findAll() {
-        return users.values();
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @PostMapping
-    public User create(@RequestBody User user) {
-        if (user.getEmail() == null || !(user.getEmail().contains("@"))) {
-            throw new ValidateException("Электронная почта не может быть пустой и должна содержать символ @");
-        }
-        if (user.getLogin() == null || user.getLogin().contains(" ")) {
-            throw new ValidateException("Логин не может быть пустым и содержать пробелы");
-        }
-        if (user.getName() == null) {
-            user.setName(user.getLogin());
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidateException("Дата рождения не может быть в будущем.");
-        }
-        user.setId(getNextId());
-        users.put(user.getId(), user);
-        return user;
+    @GetMapping("/users")
+    public List<User> findAll() {
+        return userService.getUserStorage().findAll();
     }
 
-    private long getNextId() {
-        long currentMaxId = users.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        return ++currentMaxId;
+    @GetMapping("/users/{id}")
+    public User find(@PathVariable Long id) {
+        return userService.getUserStorage().find(id);
     }
 
-    @PutMapping
-    public User update(@RequestBody User newUser) {
-        if (newUser.getEmail() == null || !(newUser.getEmail().contains("@"))) {
-            throw new ValidateException("Электронная почта не может быть пустой и должна содержать символ @");
-        }
-        if (newUser.getLogin() == null || newUser.getLogin().contains(" ")) {
-            throw new ValidateException("Логин не может быть пустым и содержать пробелы");
-        }
-        if (newUser.getName() == null) {
-            newUser.setName(newUser.getLogin());
-        }
-        if (newUser.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidateException("Дата рождения не может быть в будущем.");
-        }
-        if (users.containsKey(newUser.getId())) {
-            User oldUser = users.get(newUser.getId());
-            if (newUser.getEmail() == null) {
-                oldUser.setEmail(oldUser.getEmail());
-            } else {
-                oldUser.setEmail(newUser.getEmail());
-            }
-            if (newUser.getName() == null) {
-                oldUser.setName(oldUser.getName());
-            } else {
-                oldUser.setName(newUser.getName());
-            }
-            if (newUser.getBirthday() == null) {
-                oldUser.setBirthday(oldUser.getBirthday());
-            } else {
-                oldUser.setBirthday(newUser.getBirthday());
-            }
-            if (newUser.getLogin() == null) {
-                oldUser.setLogin(oldUser.getLogin());
-            } else {
-                oldUser.setLogin(newUser.getLogin());
-            }
-            return oldUser;
-        }
-        throw new ValidateException("Пользователь с id = " + newUser.getId() + " не найден");
+    @GetMapping("/users/{id}/friends")
+    public List<User> findFriends(@PathVariable Long id) {
+        return userService.getFriends(userService.getUserStorage().find(id).getFriends());
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> findCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        return userService.getCommonFriends(id, otherId);
+    }
+
+    @PostMapping(value = "/users")
+    public User create(@Valid @RequestBody User user) {
+        return userService.getUserStorage().create(user);
+    }
+
+    @PutMapping(value = "/users")
+    public User amend(@Valid @RequestBody User user) {
+        return userService.getUserStorage().amend(user);
+    }
+
+    @PutMapping(value = "/users/{id}/friends/{friendId}")
+    public void amend(@PathVariable Long id, @PathVariable Long friendId) {
+        userService.addFriends(id, friendId);
+    }
+
+    @DeleteMapping(value = "/users/{id}/friends/{friendId}")
+    public void delete(@PathVariable Long id, @PathVariable Long friendId) {
+        userService.deleteFriends(id, friendId);
     }
 }
