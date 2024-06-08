@@ -17,7 +17,7 @@ public class InMemoryUserStorage implements UserStorage {
     private Long id = 1L;
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserStorage.class);
 
-    private final static String WRONG_ID = "неверный номер ID";
+    private static final String WRONG_ID = "неверный номер ID";
 
     @Override
     public List<User> findAll() {
