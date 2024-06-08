@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
@@ -17,42 +18,42 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public List<User> findAll() {
         return userService.getUserStorage().findAll();
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public User find(@PathVariable Long id) {
         return userService.getUserStorage().find(id);
     }
 
-    @GetMapping("/users/{id}/friends")
+    @GetMapping("/{id}/friends")
     public List<User> findFriends(@PathVariable Long id) {
         return userService.getFriends(userService.getUserStorage().find(id).getFriends());
     }
 
-    @GetMapping("/users/{id}/friends/common/{otherId}")
+    @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> findCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
         return userService.getCommonFriends(id, otherId);
     }
 
-    @PostMapping(value = "/users")
+    @PostMapping
     public User create(@Valid @RequestBody User user) {
         return userService.getUserStorage().create(user);
     }
 
-    @PutMapping(value = "/users")
+    @PutMapping
     public User amend(@Valid @RequestBody User user) {
         return userService.getUserStorage().amend(user);
     }
 
-    @PutMapping(value = "/users/{id}/friends/{friendId}")
+    @PutMapping(value = "/{id}/friends/{friendId}")
     public void amend(@PathVariable Long id, @PathVariable Long friendId) {
         userService.addFriends(id, friendId);
     }
 
-    @DeleteMapping(value = "/users/{id}/friends/{friendId}")
+    @DeleteMapping(value = "/{id}/friends/{friendId}")
     public void delete(@PathVariable Long id, @PathVariable Long friendId) {
         userService.deleteFriends(id, friendId);
     }
