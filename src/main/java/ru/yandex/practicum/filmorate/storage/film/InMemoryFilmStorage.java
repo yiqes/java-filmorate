@@ -4,15 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.film.Film;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final HashMap<Long, Film> films = new HashMap<>();
+
     private Long id = 1L;
     private static final Logger log = LoggerFactory.getLogger(InMemoryFilmStorage.class);
 
@@ -36,6 +37,18 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
+        if (film.getName().isBlank()) {
+            throw new ValidationException("название фильма не может быть пустым");
+        }
+        if (film.getDescription().length() > 200) {
+            throw new ValidationException("Максимальная длина описания - 200 символов");
+        }
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new ValidationException("Дата релиза - не раньше 28 декабря 1895 года.");
+        }
+        if (film.getDuration() <= 0) {
+            throw new ValidationException("продолжительность фильма должна быть положительным числом");
+        }
         film.setId(id);
         films.put(id, film);
         id++;

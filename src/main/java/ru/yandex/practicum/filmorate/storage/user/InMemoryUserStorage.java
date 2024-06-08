@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.user.User;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -15,7 +17,7 @@ public class InMemoryUserStorage implements UserStorage {
     private Long id = 1L;
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserStorage.class);
 
-    private static final String wrongId = "неверный номер ID";
+    private final static String WRONG_ID = "неверный номер ID";
 
     @Override
     public List<User> findAll() {
@@ -37,6 +39,15 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User create(User user) {
+        if (user.getLogin().contains(" ")) {
+            throw new ValidationException("логин не может содержать пробелов");
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            throw new ValidationException("День рождения не может быть в будущем.");
+        }
+        if (user.getName().isBlank() && user.getLogin() == null) {
+            throw new ValidationException("поля имя и логин не могу быть пустыми одновременно");
+        }
         user.setName(checkAndReturnName(user));
         user.setId(id);
         users.put(id, user);
@@ -54,7 +65,7 @@ public class InMemoryUserStorage implements UserStorage {
             users.put(user.getId(), user);
             log.debug("Пользователь {} изменен на {}", oldUser, user);
         } else {
-            throw new NotFoundException(wrongId);
+            throw new NotFoundException(WRONG_ID);
         }
         return user;
     }
@@ -66,7 +77,7 @@ public class InMemoryUserStorage implements UserStorage {
             users.remove(user.getId());
             log.debug("Пользователь {} удалён", user);
         } else {
-            throw new NotFoundException(wrongId);
+            throw new NotFoundException(WRONG_ID);
         }
     }
 
@@ -75,7 +86,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(id)) {
             return users.get(id);
         } else {
-            throw new NotFoundException(wrongId);
+            throw new NotFoundException(WRONG_ID);
         }
     }
 

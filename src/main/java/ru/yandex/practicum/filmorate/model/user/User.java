@@ -13,7 +13,6 @@ public class User {
     @NotBlank
     @Email
     private String email;
-    @UserLoginConstraint
     private String login;
     private String name;
     @Past

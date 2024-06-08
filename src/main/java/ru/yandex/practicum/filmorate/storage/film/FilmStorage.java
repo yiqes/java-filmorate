@@ -14,5 +14,4 @@ public interface FilmStorage {
     List<Film> findAll();
 
     Film find(Long id);
-
 }
