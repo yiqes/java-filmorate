@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model.user;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -21,4 +21,5 @@ public class User {
     @Past
     LocalDate birthday;
     Set<Long> friends = new HashSet<>();
+    Status status;
 }

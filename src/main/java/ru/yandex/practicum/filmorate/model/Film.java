@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model.film;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -9,6 +9,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -23,4 +24,6 @@ public class Film {
     @Positive
     Integer duration;
     Set<Long> likes = new HashSet<>();
+    List<Genre> genres;
+    Rating rating;
 }
